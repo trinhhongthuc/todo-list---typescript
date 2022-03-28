@@ -1,25 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useDispatch } from "react-redux";
+import styled from "styled-components";
+import HeaderInput from "./components/HeaderInput";
+import ListItems from "./components/ListItems";
+import { handleAddTodoState } from "./features/todoSlice";
+const WrapperContent = styled.div`
+  margin: 0 auto;
+  background: #ccc;
+  width: 100%;
+`;
+
+export interface TodoItem {
+  id: string;
+  todo: string;
+  checked: boolean;
+}
 
 function App() {
+  const dispatch = useDispatch();
+  const [todo, setTodo] = React.useState<string>("");
+  const [todoList, setTodoList] = React.useState<TodoItem[]>([]);
+  const handleChangeTodo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodo(e.target.value);
+  };
+
+  const handleSubmitFormTodo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(handleAddTodoState(todo));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WrapperContent>
+      <HeaderInput
+        todo={todo}
+        handleChangeTodo={handleChangeTodo}
+        setTodo={setTodo}
+        handleSubmitFormTodo={handleSubmitFormTodo}
+      />
+      <ListItems todoList={todoList} />
+    </WrapperContent>
   );
 }
 
